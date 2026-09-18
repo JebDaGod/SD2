@@ -7,8 +7,8 @@ let tasks = [
         id: 1,
         title: "Sample Task",
         description: "This is what a task looks like",
-        dueDate: "2025-10-15",
-        assignedTo: "",
+        dueDate: "1999-01-01",
+        assignedTo: "Username here",
         completed: false
     }
 ];
@@ -17,10 +17,17 @@ let tasks = [
 function renderTasks() {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
-
     tasks.forEach(task => {
+        if (task.completed) return;
+
         const taskItem = document.createElement('div');
         taskItem.className = 'card task-item';
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dueDate = new Date(task.dueDate + 'T00:00:00')
+        const overdue = dueDate < today;
+
+        if (overdue) taskItem.classList.add('overdue');
         
         taskItem.innerHTML = `
             <div class="card-body">
@@ -32,7 +39,9 @@ function renderTasks() {
                         ${task.assignedTo ? `<div class="task-date">Assigned to: ${task.assignedTo}</div>` : ''}
                     </div>
                     <div class="task-actions">
-                        <!-- TODO -->
+                        <button class="btn btn-success btn-sm complete-task" data-id="${task.id}">
+                        Mark Complete
+                        </button>
                     </div>
                 </div>
             </div>
